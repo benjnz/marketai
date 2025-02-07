@@ -4,22 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Newsletter Generator</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-    <script src="script.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>AI Newsletter Generator</h1>
-    </header>
-    <main>
-        <form id="newsletter-form">
-            <textarea id="company-info" placeholder="Enter company information"></textarea>
-            <input type="file" id="media-upload" multiple>
-            <button type="submit">Generate Newsletter</button>
-        </form>
-        <div id="newsletter-output"></div>
-    </main>
+    <h1>AI Newsletter Generator</h1>
+    <form id="newsletter-form">
+        <label for="company-info">Company Information:</label><br>
+        <textarea id="company-info" name="company_info" rows="4" cols="50"></textarea><br>
+        <label for="media-urls">Media URLs (comma-separated):</label><br>
+        <input type="text" id="media-urls" name="media_urls" size="50"><br>
+        <input type="submit" value="Generate Newsletter">
+    </form>
+    <div id="newsletter-output"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#newsletter-form').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/generate_newsletter',
+                    type: 'post',
+                    data: $('#newsletter-form').serialize(),
+                    success: function(response) {
+                        $('#newsletter-output').html('<h2>Generated Newsletter:</h2><pre>' + response.newsletter + '</pre>');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
